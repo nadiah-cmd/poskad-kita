@@ -115,8 +115,20 @@
 
           <div class="download-row">
             <button type="button" class="btn" id="muat-turun">Muat Turun Poskad</button>
+            <button type="button" class="btn btn-quiet" id="muat-qr">Muat Turun QR</button>
             <p id="status-muat" class="status" role="status"></p>
           </div>
+          <section class="qr-panel" aria-labelledby="tajuk-qr">
+            <figure class="qr-card" id="kad-qr">
+              <canvas id="kod-qr" width="360" height="360" aria-labelledby="tajuk-qr qr-caption"></canvas>
+              <figcaption id="qr-caption">Melaka — Kampung Morten</figcaption>
+            </figure>
+            <div>
+              <h3 id="tajuk-qr">Kod QR poskad</h3>
+              <p class="qr-note">Imbas dengan kamera telefon untuk baca destinasi dan pesanan. Kod bertukar semasa anda menulis.</p>
+              <p id="status-qr" class="status" role="status"></p>
+            </div>
+          </section>
           <div id="eksport-ralat" class="export-fallback" hidden>
             <p id="eksport-mesej"></p>
             <p><a id="buka-png" target="_blank" rel="noopener">Buka imej PNG</a></p>

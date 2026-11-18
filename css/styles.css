@@ -238,6 +238,16 @@ textarea {
   background: #ffd06a;
 }
 
+.btn-quiet {
+  background: transparent;
+  color: var(--cream);
+}
+
+.btn-quiet:hover {
+  background: var(--gold);
+  color: var(--ink);
+}
+
 .btn:focus-visible {
   outline-color: var(--cream);
 }
@@ -274,6 +284,7 @@ button.btn:disabled {
 
 .hero h1,
 .section h2,
+.qr-panel h3,
 .postcard-title,
 .back-brand,
 .footer-brand span:first-child {
@@ -661,6 +672,63 @@ select:focus-visible {
 .status {
   margin: 0;
   min-height: 1.4em;
+}
+
+.qr-panel {
+  display: grid;
+  gap: 1.1rem 2rem;
+  align-items: center;
+  max-width: 40rem;
+  margin-top: 1.35rem;
+}
+
+.qr-card {
+  margin: 0;
+  padding: 0.85rem 0.85rem 0.75rem;
+  border-top: 4px solid var(--accent, #d86a32);
+  border-radius: 12px;
+  background: var(--cream);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.35) inset,
+    0 0 0 1px rgba(34, 43, 54, 0.14),
+    0 18px 38px rgba(5, 10, 18, 0.34);
+}
+
+.qr-card canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  image-rendering: pixelated;
+}
+
+.qr-card figcaption {
+  margin: 0.65rem 0 0;
+  color: var(--ink);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.qr-panel h3 {
+  margin: 0 0 0.4rem;
+  font-size: clamp(1.55rem, 3vw, 2.15rem);
+  font-weight: 650;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+}
+
+.qr-note {
+  max-width: 34rem;
+  margin: 0;
+  color: rgba(255, 241, 215, 0.86);
+}
+
+@media (min-width: 800px) {
+  .qr-panel {
+    grid-template-columns: 16.5rem minmax(0, 1fr);
+  }
 }
 
 .export-fallback {

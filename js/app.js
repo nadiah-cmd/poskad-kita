@@ -1,6 +1,7 @@
 import { DESTINATIONS, FEATURED_IDS, getDestination } from "./data.js";
 import { drawPostmark, drawScene, drawStamp, hasScene } from "./art.js";
 import { renderPostcardBlob } from "./export.js";
+import { paintQr, postcardText, renderQrCardBlob } from "./qr.js";
 
 const missing = DESTINATIONS.filter((item) => !hasScene(item.id)).map((item) => item.id);
 if (missing.length) throw new Error(`Ilustrasi belum lengkap: ${missing.join(", ")}`);
@@ -19,6 +20,11 @@ const faceBack = document.getElementById("face-back");
 const btnDepan = document.getElementById("btn-depan");
 const btnBelakang = document.getElementById("btn-belakang");
 const downloadButton = document.getElementById("muat-turun");
+const qrButton = document.getElementById("muat-qr");
+const qrCanvas = document.getElementById("kod-qr");
+const qrCard = document.getElementById("kad-qr");
+const qrCaption = document.getElementById("qr-caption");
+const qrStatus = document.getElementById("status-qr");
 const downloadStatus = document.getElementById("status-muat");
 const destinationStatus = document.getElementById("status-destinasi");
 const fallback = document.getElementById("eksport-ralat");
@@ -30,6 +36,7 @@ const postmark = document.getElementById("cop-pos");
 let side = "depan";
 let flipping = false;
 let objectUrl = null;
+let qrObjectUrl = null;
 let paintFrame = 0;
 
 function buildSelect() {
@@ -140,6 +147,18 @@ function syncCount() {
   counter.dataset.full = count >= 180 ? "true" : "false";
 }
 
+function currentMessage() {
+  return textarea.value.slice(0, 180);
+}
+
+function paintShare() {
+  const dest = getDestination(state.id);
+  const message = currentMessage();
+  qrCard.style.setProperty("--accent", dest.accent);
+  qrCaption.textContent = `${dest.menu} — ${dest.title}`;
+  paintQr(qrCanvas, postcardText(dest, message));
+}
+
 function updateCopy(dest) {
   document.getElementById("kicker-depan").textContent = dest.menu;
   document.getElementById("tajuk-depan").textContent = dest.title;
@@ -165,6 +184,7 @@ function setDestination(id, { scroll = false } = {}) {
   if (select.value !== dest.id) select.value = dest.id;
   updateCopy(dest);
   paintAll();
+  paintShare();
   if (changed && state.ready) {
     playStamp();
     downloadStatus.textContent = "";
@@ -231,14 +251,14 @@ function showSide(next) {
   flipInner.style.transform = "rotateY(90deg)";
 }
 
-function showFallback(url, message, dest) {
+function showFallback(url, message, alt) {
   fallbackMessage.textContent = message;
   if (url) {
     openLink.href = url;
     openLink.hidden = false;
     previewImage.src = url;
     previewImage.hidden = false;
-    previewImage.alt = `Poskad ${dest.menu}, depan dan belakang.`;
+    previewImage.alt = alt;
   } else {
     openLink.hidden = true;
     previewImage.removeAttribute("src");
@@ -248,25 +268,28 @@ function showFallback(url, message, dest) {
   fallback.hidden = false;
 }
 
+function saveBlob(url, filename) {
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = filename;
+  document.body.append(link);
+  link.click();
+  link.remove();
+}
+
 async function downloadPostcard() {
   const dest = getDestination(state.id);
-  const message = textarea.value.slice(0, 180);
+  const message = currentMessage();
   downloadButton.disabled = true;
   try {
     const blob = await renderPostcardBlob(dest, message);
     if (objectUrl) URL.revokeObjectURL(objectUrl);
     objectUrl = URL.createObjectURL(blob);
-    const filename = `poskad-kita-${dest.id}.png`;
-    const link = document.createElement("a");
-    link.href = objectUrl;
-    link.download = filename;
-    document.body.append(link);
-    link.click();
-    link.remove();
+    saveBlob(objectUrl, `poskad-kita-${dest.id}.png`);
     const blocked = /iP(hone|ad|od)/.test(navigator.userAgent);
     if (blocked) {
       downloadStatus.textContent = "";
-      showFallback(objectUrl, "Pelayar ini menyekat muat turun automatik. Buka imej PNG dan simpan ke peranti anda.", dest);
+      showFallback(objectUrl, "Pelayar ini menyekat muat turun automatik. Buka imej PNG dan simpan ke peranti anda.", `Poskad ${dest.menu}, depan dan belakang.`);
       return;
     }
     fallback.hidden = true;
@@ -278,10 +301,41 @@ async function downloadPostcard() {
       objectUrl
         ? "Muat turun tidak berjaya. Buka imej PNG dan simpan ke peranti anda."
         : "Imej PNG tidak dapat dijana. Cuba lagi.",
-      dest
+      `Poskad ${dest.menu}, depan dan belakang.`
     );
   } finally {
     downloadButton.disabled = false;
+  }
+}
+
+async function downloadQr() {
+  const dest = getDestination(state.id);
+  const message = currentMessage();
+  qrButton.disabled = true;
+  try {
+    const blob = await renderQrCardBlob(dest, message);
+    if (qrObjectUrl) URL.revokeObjectURL(qrObjectUrl);
+    qrObjectUrl = URL.createObjectURL(blob);
+    saveBlob(qrObjectUrl, `poskad-kita-${dest.id}-qr.png`);
+    const blocked = /iP(hone|ad|od)/.test(navigator.userAgent);
+    if (blocked) {
+      qrStatus.textContent = "";
+      showFallback(qrObjectUrl, "Pelayar ini menyekat muat turun automatik. Buka imej QR dan simpan ke peranti anda.", `Kod QR poskad ${dest.menu}.`);
+      return;
+    }
+    fallback.hidden = true;
+    qrStatus.textContent = "Kod QR dimuat turun.";
+  } catch (error) {
+    qrStatus.textContent = "";
+    showFallback(
+      qrObjectUrl,
+      qrObjectUrl
+        ? "Muat turun QR tidak berjaya. Buka imej dan simpan ke peranti anda."
+        : "Kod QR tidak dapat dijana. Cuba lagi.",
+      `Kod QR poskad ${dest.menu}.`
+    );
+  } finally {
+    qrButton.disabled = false;
   }
 }
 
@@ -291,6 +345,7 @@ function bind() {
     if (textarea.value.length > 180) textarea.value = textarea.value.slice(0, 180);
     syncCount();
     fitMessage();
+    paintShare();
   });
   btnDepan.addEventListener("click", () => showSide("depan"));
   btnBelakang.addEventListener("click", () => showSide("belakang"));
@@ -301,6 +356,7 @@ function bind() {
     showSide("belakang");
   });
   downloadButton.addEventListener("click", downloadPostcard);
+  qrButton.addEventListener("click", downloadQr);
   mobileQuery.addEventListener("change", () => {
     flipping = false;
     flipInner.style.transform = "";
