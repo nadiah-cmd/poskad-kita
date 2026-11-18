@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ms">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>POSKAD KITA — Kirim sekeping Malaysia</title>
+    <meta name="description" content="Pilih destinasi Malaysia, tulis pesanan dan cipta poskad digital anda.">
+    <meta property="og:site_name" content="POSKAD KITA">
+    <meta property="og:title" content="POSKAD KITA — Kirim sekeping Malaysia">
+    <meta property="og:description" content="Pilih destinasi, tulis pesanan dan cipta poskad Malaysia versi anda.">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="ms_MY">
+    <meta name="theme-color" content="#101B2C">
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="css/styles.css">
+  </head>
+  <body>
+    <a class="skip" href="#editor">Langkau ke editor</a>
+    <header class="nav" id="atas" tabindex="-1">
+      <a class="brand" href="#atas">
+        <svg viewBox="0 0 32 32" aria-hidden="true">
+          <g fill="none" stroke="#F6BE49" stroke-width="1.6">
+            <ellipse cx="16" cy="7.4" rx="3.2" ry="5.3"/>
+            <ellipse cx="16" cy="7.4" rx="3.2" ry="5.3" transform="rotate(72 16 16)"/>
+            <ellipse cx="16" cy="7.4" rx="3.2" ry="5.3" transform="rotate(144 16 16)"/>
+            <ellipse cx="16" cy="7.4" rx="3.2" ry="5.3" transform="rotate(216 16 16)"/>
+            <ellipse cx="16" cy="7.4" rx="3.2" ry="5.3" transform="rotate(288 16 16)"/>
+          </g>
+          <circle cx="16" cy="16" r="2.15" fill="#F6BE49"/>
+        </svg>
+        <span>POSKAD KITA</span>
+      </a>
+      <nav class="nav-links" aria-label="Halaman">
+        <a href="#utama">Utama</a>
+        <a href="#destinasi">Destinasi</a>
+      </nav>
+      <a class="btn" href="#editor">Cipta Poskad Saya</a>
+    </header>
+
+    <main>
+      <section id="utama" class="hero" tabindex="-1">
+        <div class="hero-bg" aria-hidden="true">
+          <svg class="route" viewBox="0 0 1200 760" preserveAspectRatio="xMidYMid slice">
+            <path d="M620 700 C 760 640, 860 560, 980 500 S 1120 390, 1260 250" fill="none" stroke="#F6BE49" stroke-width="2" stroke-dasharray="1.5 12" stroke-linecap="round"/>
+            <circle cx="620" cy="700" r="5" fill="#F6BE49"/>
+            <circle cx="1248" cy="258" r="5" fill="#F6BE49"/>
+          </svg>
+        </div>
+        <div class="wrap hero-grid">
+          <div class="hero-copy">
+            <h1>Kirim sekeping Malaysia.</h1>
+            <p class="slogan">Jauh berjalan, dekat di hati.</p>
+            <p class="lede">Pilih destinasi, tulis pesanan dan cipta poskad Malaysia versi anda.</p>
+            <a class="btn" href="#editor">Cipta Poskad Saya</a>
+          </div>
+          <div class="hero-card">
+            <article class="postcard postcard-front" style="--accent: #D86A32">
+              <canvas data-draw="scene" data-id="melaka" width="900" height="600" aria-hidden="true"></canvas>
+              <div class="caption">
+                <p class="postcard-kicker">Melaka</p>
+                <p class="postcard-title">Kampung Morten</p>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="editor" class="section" tabindex="-1">
+        <div class="wrap">
+          <h2>Cipta poskad anda</h2>
+          <div class="field">
+            <label for="destinasi">Pilih Negeri atau Wilayah</label>
+            <div class="select-wrap">
+              <select id="destinasi"></select>
+            </div>
+          </div>
+
+          <div class="side-toggle" role="group" aria-label="Pilih sisi poskad">
+            <button type="button" id="btn-depan" aria-pressed="true">Depan</button>
+            <button type="button" id="btn-belakang" aria-pressed="false">Belakang</button>
+          </div>
+
+          <div class="flip-scene">
+            <div class="flip-inner" id="flip-inner" data-side="depan">
+              <div class="face face-front" id="face-front">
+                <article class="postcard postcard-front" id="poskad-depan">
+                  <canvas data-draw="scene" data-id="editor" width="900" height="600" aria-hidden="true"></canvas>
+                  <div class="caption">
+                    <p class="postcard-kicker" id="kicker-depan">Melaka</p>
+                    <p class="postcard-title" id="tajuk-depan">Kampung Morten</p>
+                  </div>
+                </article>
+              </div>
+              <div class="face face-back" id="face-back">
+                <article class="postcard postcard-back" id="poskad-belakang">
+                  <div class="back-head">
+                    <p class="back-brand">POSKAD KITA</p>
+                    <div class="stamp-stack">
+                      <canvas class="stamp-canvas" data-draw="stamp" data-id="editor" width="220" height="264" aria-hidden="true"></canvas>
+                      <canvas class="postmark-canvas" id="cop-pos" data-draw="postmark" data-id="editor" width="320" height="280" aria-hidden="true"></canvas>
+                    </div>
+                  </div>
+                  <div class="label-row">
+                    <label for="pesanan">Pesanan anda</label>
+                    <span id="kiraan">0/180 aksara</span>
+                  </div>
+                  <textarea id="pesanan" maxlength="180" rows="4" placeholder="Tulis pesanan anda…" aria-describedby="kiraan" autocomplete="off" autocapitalize="sentences"></textarea>
+                  <p class="back-foot"><span id="asal-pos">Melaka</span><span>Malaysia</span></p>
+                </article>
+              </div>
+            </div>
+          </div>
+
+          <div class="download-row">
+            <button type="button" class="btn" id="muat-turun">Muat Turun Poskad</button>
+            <p id="status-muat" class="status" role="status"></p>
+          </div>
+          <div id="eksport-ralat" class="export-fallback" hidden>
+            <p id="eksport-mesej"></p>
+            <p><a id="buka-png" target="_blank" rel="noopener">Buka imej PNG</a></p>
+            <img id="pratonton-png" alt="">
+          </div>
+          <p id="status-destinasi" class="sr-only" aria-live="polite"></p>
+        </div>
+      </section>
+
+      <section id="destinasi" class="section" tabindex="-1">
+        <div class="wrap">
+          <h2>Jelajah Malaysia</h2>
+          <p class="section-intro">Pilih satu tempat untuk membukanya dalam editor. Draf pesanan anda kekal.</p>
+          <div class="preview-grid" id="pratonton"></div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="wrap footer-inner">
+        <div class="footer-brand">
+          <span>POSKAD KITA</span>
+          <span class="footer-note">Projek demonstrasi</span>
+        </div>
+        <a href="#atas">Kembali ke atas</a>
+      </div>
+    </footer>
+    <noscript>
+      <p class="wrap noscript">Hidupkan JavaScript untuk melukis poskad dan memuat turun imej.</p>
+    </noscript>
+    <script type="module" src="js/app.js"></script>
+  </body>
+</html>
