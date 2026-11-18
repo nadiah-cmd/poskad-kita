@@ -14,6 +14,7 @@ const select = document.getElementById("destinasi");
 const textarea = document.getElementById("pesanan");
 const counter = document.getElementById("kiraan");
 const flipInner = document.getElementById("flip-inner");
+const faceFront = document.getElementById("face-front");
 const faceBack = document.getElementById("face-back");
 const btnDepan = document.getElementById("btn-depan");
 const btnBelakang = document.getElementById("btn-belakang");
@@ -180,16 +181,16 @@ function applySide() {
   flipInner.dataset.side = side;
   btnDepan.setAttribute("aria-pressed", side === "depan" ? "true" : "false");
   btnBelakang.setAttribute("aria-pressed", side === "belakang" ? "true" : "false");
-  const hideBack = mobileQuery.matches && side !== "belakang";
-  faceBack.inert = hideBack;
-  if (hideBack && faceBack.contains(document.activeElement)) btnDepan.focus();
+  faceFront.inert = side !== "depan";
+  faceBack.inert = side !== "belakang";
+  if (faceBack.inert && faceBack.contains(document.activeElement)) btnDepan.focus();
+  if (faceFront.inert && faceFront.contains(document.activeElement)) btnBelakang.focus();
 }
 
 function showSide(next) {
   if (next === side || flipping) return;
   if (next === "depan" && document.activeElement === textarea) textarea.blur();
-  const animate = mobileQuery.matches && !reduceMotion.matches;
-  if (!animate) {
+  if (reduceMotion.matches) {
     side = next;
     applySide();
     schedulePaint();
@@ -216,15 +217,16 @@ function showSide(next) {
       stage = 1;
       side = next;
       applySide();
-      flipInner.style.transition = "transform 0.28s ease-out";
+      schedulePaint();
+      flipInner.style.transition = "transform 0.46s ease-out";
       flipInner.style.transform = "rotateY(0deg)";
       return;
     }
     finish();
   };
-  const backup = window.setTimeout(finish, 900);
+  const backup = window.setTimeout(finish, 1400);
   flipInner.addEventListener("transitionend", onEnd);
-  flipInner.style.transition = "transform 0.26s ease-in";
+  flipInner.style.transition = "transform 0.4s ease-in";
   void flipInner.offsetWidth;
   flipInner.style.transform = "rotateY(90deg)";
 }
@@ -292,6 +294,12 @@ function bind() {
   });
   btnDepan.addEventListener("click", () => showSide("depan"));
   btnBelakang.addEventListener("click", () => showSide("belakang"));
+  faceFront.addEventListener("click", () => showSide("belakang"));
+  faceFront.addEventListener("keydown", (event) => {
+    if (event.key !== "Enter" && event.key !== " ") return;
+    event.preventDefault();
+    showSide("belakang");
+  });
   downloadButton.addEventListener("click", downloadPostcard);
   mobileQuery.addEventListener("change", () => {
     flipping = false;

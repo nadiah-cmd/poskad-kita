@@ -79,12 +79,14 @@
             <button type="button" id="btn-depan" aria-pressed="true">Depan</button>
             <button type="button" id="btn-belakang" aria-pressed="false">Belakang</button>
           </div>
+          <p class="flip-hint">Ketik poskad untuk membalikkannya.</p>
 
           <div class="flip-scene">
             <div class="flip-inner" id="flip-inner" data-side="depan">
-              <div class="face face-front" id="face-front">
+              <div class="face face-front" id="face-front" role="button" tabindex="0" aria-label="Balik ke belakang poskad">
                 <article class="postcard postcard-front" id="poskad-depan">
                   <canvas data-draw="scene" data-id="editor" width="900" height="600" aria-hidden="true"></canvas>
+                  <span class="flip-cue">Balik</span>
                   <div class="caption">
                     <p class="postcard-kicker" id="kicker-depan">Melaka</p>
                     <p class="postcard-title" id="tajuk-depan">Kampung Morten</p>

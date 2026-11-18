@@ -397,12 +397,59 @@ select:focus-visible {
   color: var(--ink);
 }
 
+.flip-hint {
+  margin: -0.2rem 0 0.75rem;
+  color: rgba(255, 241, 215, 0.78);
+  font-size: 0.98rem;
+}
+
 .flip-scene {
+  perspective: 1400px;
+  max-width: 40rem;
   margin-bottom: 0.2rem;
+}
+
+.flip-inner {
+  position: relative;
+}
+
+.flip-inner[data-side="depan"] .face-back,
+.flip-inner[data-side="belakang"] .face-front {
+  visibility: hidden;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  pointer-events: none;
 }
 
 .face {
   min-width: 0;
+}
+
+.face-front {
+  cursor: pointer;
+}
+
+.face-front:focus-visible {
+  outline: 3px solid var(--gold);
+  outline-offset: 4px;
+  border-radius: 14px;
+}
+
+.flip-cue {
+  position: absolute;
+  top: 0.7rem;
+  right: 0.7rem;
+  z-index: 2;
+  padding: 0.28rem 0.65rem;
+  border-radius: 999px;
+  background: rgba(16, 27, 44, 0.72);
+  color: var(--cream);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  pointer-events: none;
 }
 
 .postcard {
@@ -742,41 +789,12 @@ footer a {
 }
 
 @media (min-width: 900px) {
-  .side-toggle {
-    display: none;
-  }
-
-  .flip-inner {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1.4rem;
-    align-items: start;
-  }
-
   .download-row .btn {
     min-width: 14rem;
   }
 }
 
 @media (max-width: 899px) {
-  .flip-scene {
-    perspective: 1400px;
-  }
-
-  .flip-inner {
-    position: relative;
-    transition: transform 0.28s ease;
-  }
-
-  .flip-inner[data-side="depan"] .face-back,
-  .flip-inner[data-side="belakang"] .face-front {
-    visibility: hidden;
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    pointer-events: none;
-  }
-
   .download-row .btn {
     width: 100%;
   }
